@@ -1,0 +1,163 @@
+@downloaded-at 2025-08-01 13:08:13
+@source "192.0.2.20"
+@purpose bridge
+router UnredactedMeek1 85.215.242.20 8443 0 0
+identity-ed25519
+-----BEGIN ED25519 CERT-----
+AQQAB3BmAW4kJQXbOYc5QMEp+Ml0ivPNtS5HFrDAcljw9h5lw77NAQAgBAB3MwKA
+LWJT/0MbqL94cO7ho6A/kMJwNPRa2RxAKmToqeFBfmNgfb7jSw3FEhGLxZw32UGV
+kvW1JEYu+1pjiJQ9SPQ4U0LILnD3f8mbvS1odFizoECYYajH0edatXpJugI=
+-----END ED25519 CERT-----
+master-key-ed25519 dzMCgC1iU/9DG6i/eHDu4aOgP5DCcDT0WtkcQCpk6Kk
+platform Tor 0.4.8.16 on Linux
+proto Conflux=1 Cons=1-2 Desc=1-2 DirCache=2 FlowCtrl=1-2 HSDir=2 HSIntro=4-5 HSRend=1-2 Link=1-5 LinkAuth=1,3 Microdesc=1-2 Padding=2 Relay=1-4
+published 2025-08-01 12:53:22
+fingerprint 255E E68D 31F2 65C7 68A4 3907 EB00 449D 674F 0FD2
+uptime 1799147
+bandwidth 8388608 1073741824 11363663
+extra-info-digest EFB3E047CCBF1C005BCC47EA2CF8C1C9BE64D577 Td87SwOerT3QQGbnMeBAWKUALjv0HA+PXbu3guftsSw
+onion-key
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBAOaH81ZFpXcu9FW2LGDrwsKmv7xzjKWk9DqtRJBpVvVVh7iNkZUviWI/
+HHqvcGST70hTqFTZpLl9JcFGulIot6LDhtYCBn/QTETsVLg5sCHM1/4btmUj0oYm
+AVhANRez8z9CfrOVeO+czJuyWGQrydcLMj8NwWA4JmkLcms357z1AgMBAAE=
+-----END RSA PUBLIC KEY-----
+signing-key
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBAMGCEt+KZUj/9rOzG+RqqNVGHvd/P/+8ObZpJjy6kv6zaFoQoyIWU0VE
+ezNdNhjfWgJwJpSpkafXAXmjef2ugx5/sWVfsFKNuWdy1JnvRAELU3PmUWJPJRWi
+8RoaMYRS6UvkgCDxmXhtN3nRwkbgJMqBwwzpqbYG4NCpBV/F3I0jAgMBAAE=
+-----END RSA PUBLIC KEY-----
+onion-key-crosscert
+-----BEGIN CROSSCERT-----
+ScqOX/oWwQHIIGhhLjCKpt3sxY5qD5OFBY0zuKvv9IJvzsFFAZxaJU3Iykqa/t+v
+KlNcrC866Ot8EpmQxNn15IFQ5t1Cw035XB34DBFU6GLxn6ZX+I9XPury3y4J50i/
+OezB5T8cDQu6tAHbkrjl0P2CIW5SwgCRZiS+IAQOmVs=
+-----END CROSSCERT-----
+ntor-onion-key-crosscert 0
+-----BEGIN ED25519 CERT-----
+AQoAB3HlAXczAoAtYlP/Qxuov3hw7uGjoD+QwnA09FrZHEAqZOipAB8yMXTeldqQ
+CbCAJpEH0Tnrdp/EK1kMxoMeibePvlnxBBQJI5gJEs8gSQUW8jNuJfaZDR5n8qZ0
+XezESgWafwA=
+-----END ED25519 CERT-----
+hidden-service-dir
+contact email:admin[@]unredacted.org url:unredacted.org proof:uri-rsa ciissversion:2
+bridge-distribution-request any
+ntor-onion-key NzcXn47zpxCGbvsR+I+PTvYf8a5FgBmDyTcMxOEf42M
+reject *:*
+tunnelled-dir-server
+router-sig-ed25519 Rtza49XW9iDKXcOgotZQDaoaXSFnCdVIlDaWlB5BZvcPvIaokoxUARjU8DbNFNXB7vogZE3Wh5U+dePs7BF1Cw
+router-signature
+-----BEGIN SIGNATURE-----
+bv5YZXYzdDiBwBRu+sCZ7vmwgGa264JzfnX1ifEBdMFsHu50K1Kh4nrKr68AIupE
+5zWjUzt9RMnU7+EZTWsqkwpdr3cupx/cJcsWqiif9iZT+aKLWnJNCiBkaCbfXjpB
+bf9kcBwKMFblIOIJ0pe5RmEJxqUo4NcvJSbBE3kknEs=
+-----END SIGNATURE-----
+@downloaded-at 2025-08-01 13:12:38
+@source "192.0.2.4"
+@purpose bridge
+router crusty4 141.212.118.18 30035 0 0
+identity-ed25519
+-----BEGIN ED25519 CERT-----
+AQQAB3FeAcymkT+T8fuezh4gdIQpBgcKBJ7lFCaAGgC++77KPqC+AQAgBAC072di
+80IB0CH2U+gQS/aln0Emr5jOY8AxjqnGgWsu6ck+Kzorms8SgYZmGMLwb76ZY1lv
+GgsWPaT4eF1CfAk8XNRdvpbsf1P7OAQDJYfveLv31rR/GgzS+RJ/+bDXQgw=
+-----END ED25519 CERT-----
+master-key-ed25519 tO9nYvNCAdAh9lPoEEv2pZ9BJq+YzmPAMY6pxoFrLuk
+platform Tor 0.4.8.13 on Linux
+proto Conflux=1 Cons=1-2 Desc=1-2 DirCache=2 FlowCtrl=1-2 HSDir=2 HSIntro=4-5 HSRend=1-2 Link=1-5 LinkAuth=1,3 Microdesc=1-2 Padding=2 Relay=1-4
+published 2025-08-01 12:56:56
+fingerprint 8838 0244 9881 6A03 9FCB BAB1 4E6F 40A0 8430 51FA
+uptime 23222211
+bandwidth 1073741824 1073741824 20964283
+extra-info-digest C88743FF9E037E1B6BD50FC5A5EFB75EEF78D49F Qte/urSB2XA1jX9HMbz31NQg26PP8eAljkr/dEnAWCA
+onion-key
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBAMLXCxliT8ZBoPl3iSXt0oSuWZZnvxKMIBAsWUVLd6d0RY0Sy8vRUPwd
+VCx6DArNIdNdvg8r8eqrcX42fTLlN2cvjYoiFkhWO/NQ4WzvlX6D/z+nAENmK/8g
+o+fE6Ezo84DAF9pxaHlkC8x7kLOP1LzWWGy1uLs47CSCgtbgA8+BAgMBAAE=
+-----END RSA PUBLIC KEY-----
+signing-key
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBANPdnu710RqnEAlZm7QJFtTdqSRFF2NDN2PZLJzOLyEFMQnCxWntsxct
+d2H1kVRU+++JuvAFLhWAwkQpwcExTu4G6eukx05OZfsiOnZ5PLpFFv86iyWSPPXA
++X6q90Aau1aZBhrCZncEA8PFsrdte2tQZ3SS53I6G4Z1Pjh2DC05AgMBAAE=
+-----END RSA PUBLIC KEY-----
+onion-key-crosscert
+-----BEGIN CROSSCERT-----
+p1HB2QwMHSu6/ffDFmL89f9RLmfPb6vUNNuC5Jt9pFDSH0UW3MKQ6R2Uz+mzO7sL
+EcGOaY2KDpTkheX2m0dMMeIHST6MLnSFoo4CKdbfa2geDIt+au7uWtC4AhngqUK8
+M236VL4JvV38pA1w851fOw7TmUm50QvrO/nwn+DT+ho=
+-----END CROSSCERT-----
+ntor-onion-key-crosscert 0
+-----BEGIN ED25519 CERT-----
+AQoAB3HlAbTvZ2LzQgHQIfZT6BBL9qWfQSavmM5jwDGOqcaBay7pAPzJ0AGN6aNE
+iYLlFJTtF0zFhgLqJGamg9SPp8ykhYvUwFHMVL3M99Miytz8Bo6tExLKtnm3lcUr
+UrildU0+rQ8=
+-----END ED25519 CERT-----
+hidden-service-dir
+bridge-distribution-request none
+ntor-onion-key g8DOvVaGgJHS03iVUZFX9+Qixc6pL3wF3q2Yvx8sMw0
+reject *:*
+tunnelled-dir-server
+router-sig-ed25519 cqPAFLRzGYj4QVPv6FfgoGUoIUdOsc7QfkD6uWCu2SoUKMLBTa9P7T4abhlABZg1EJy4HmjYR0If8MbpXaNGCA
+router-signature
+-----BEGIN SIGNATURE-----
+rcONlKMNKWMEciQfqV3Mv3e35qh+u78dVyWJdefDvP3ferFRuI/Fm2wH83AgJ9BZ
+Ic+AcMD4FgvNk0Bv4AudIIz2LtzdGgexrAeYWpDX758Zdso7YkJcNbikTja+9g2p
+Y9UQgNCoCPn27PA4rElEqi0VrHrMo7+VyLgvcmATcQo=
+-----END SIGNATURE-----
+@downloaded-at 2025-08-01 13:23:15
+@source "192.0.2.3"
+@purpose bridge
+router flakey10 193.187.88.42 33155 0 0
+identity-ed25519
+-----BEGIN ED25519 CERT-----
+AQQAB2/1AUgh2rcTTQ5rj739magXJ1IR6L10jpA+a0MNn2+wLhqAAQAgBADXM4em
+D4XGpB+L/qMMu0KkceoFMfyCNiYIpeS6zUPkqkWjzktcJy9Vvv/3s/SRiFiXQqIT
+dgB1FrsWezEcS7Vx4wxPmgufuSXQ4RNckfI1ydHnCjxIkTtu2gS4B/PiFQw=
+-----END ED25519 CERT-----
+master-key-ed25519 1zOHpg+FxqQfi/6jDLtCpHHqBTH8gjYmCKXkus1D5Ko
+platform Tor 0.4.8.16 on Linux
+proto Conflux=1 Cons=1-2 Desc=1-2 DirCache=2 FlowCtrl=1-2 HSDir=2 HSIntro=4-5 HSRend=1-2 Link=1-5 LinkAuth=1,3 Microdesc=1-2 Padding=2 Relay=1-4
+published 2025-08-01 13:19:38
+fingerprint 2B28 0B23 E110 7BB6 2ABF C40D DCC8 8248 14F8 0A72
+uptime 1990518
+bandwidth 1073741824 1073741824 28992214
+extra-info-digest CCEF54776F4039615F2C41ED400A6D0A04D2E81A dOj6koo+auvvL25v5Ak12Iqn+9+i5gU9vi98WM7sm04
+onion-key
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBAL4M823keJx7iocPNfVvkGEEiy9OEndXj9JGm2iP1CNxX22sie8Xea7U
+xvTVFrOZcpaLOXwFvpjS1XQgX3HjwmPeswCPbehivO0HcCoiGM1ZJ/zFSLmV+DNK
+FQ8kF3DkbvmDLABa3vdGPuE89oYOq08ISafP1AfajPQuTXPFqUlhAgMBAAE=
+-----END RSA PUBLIC KEY-----
+signing-key
+-----BEGIN RSA PUBLIC KEY-----
+MIGJAoGBALZH1IXukeABviaP44qHCYxSQ8FJHK2JXcTZnZQ7q/2hSehmVZzXuZuY
+9CeQ7iIxu+qNQFnhhfo39XPnCvJCHa2z+HVJn85x++FiRLO/ZTC/7VeoRUATnMDz
+bGQHXGey+sCuXeamCqYSMiXRRnHPIXTA6UqyXpF/JuN3qziY1OHBAgMBAAE=
+-----END RSA PUBLIC KEY-----
+onion-key-crosscert
+-----BEGIN CROSSCERT-----
+KOLGFOJsZRL4hYjegks5imIxNtMNMr2rjU85XN1nPNzx53Ka7j5ZUMKv/sWJ6KSH
+zH2tHM4bZTCwv8Da98+SBNzMvsOCUdqZZOu9awuNLf3bnWRKts804/zEjgd5XxOm
+7OjPc3/BPU1jdKao/NlqlYNhiiP8dENwRJHr7E/9o48=
+-----END CROSSCERT-----
+ntor-onion-key-crosscert 0
+-----BEGIN ED25519 CERT-----
+AQoAB3HmAdczh6YPhcakH4v+owy7QqRx6gUx/II2Jgil5LrNQ+SqAPfsTjmyoj3L
+IVXkE5fMabMLdMZr2aQi1UQaJ7G+JxxfaKVqvuDl8wLTZJoBtHkde5iPzxe4xZh1
+8odV8UtbAw4=
+-----END ED25519 CERT-----
+hidden-service-dir
+bridge-distribution-request none
+ntor-onion-key u61PlrYpYPELtrfUnqAOLVjQ4izDFFopVTI+KiuDvg0
+reject *:*
+tunnelled-dir-server
+router-sig-ed25519 qwuYYPw3ApKWHcF9WIV2oUWqg83Cy9rJ2Mnb0kV5e5idF/cJr07cVgsBNLfxNNYsR+nopoRo+rWadoC7XTrOCA
+router-signature
+-----BEGIN SIGNATURE-----
+A8lV4j1QeMQiDYTLst2M7opzAmIZiWaGzYcrk0JrheXoLsFLX/F3fmbBDiMQ9MYp
+sSvvtkvvmecM+8QhnfoHpkh/gV19mJ4KlVQupw34JNB9I/7W9+0yMhVF7C4ZipmU
+efFxRD3kCc2MMPfApi9ZPGl9O8r0hMp/1rFzERQCZVY=
+-----END SIGNATURE-----

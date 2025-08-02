@@ -63,7 +63,7 @@ def start_tor():
         config = get_tor_config(),
         tor_cmd=tor_path,  # Явный путь к Tor
         take_ownership=True,  # Убить процесс при выходе
-        init_msg_handler=lambda line: print(line) if "Bootstrapped" in line else None,
+        init_msg_handler=lambda line: print(line[line.index('%') - 2:line.index('%') + 1]) if ("Bootstrapped" in line and "100" not in line) else None,
     )
     return tor_process
 
