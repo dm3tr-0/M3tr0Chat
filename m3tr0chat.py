@@ -99,8 +99,10 @@ def receive_message():
     message = request.form.get('message', '')
     
     if message:
+        sender, message = message.split('onion ')
+        sender = 'http://' + sender + 'onion'
         received_messages.append((sender, message))
-        print(f"\n{Fore.BLUE}Новое сообщение{Style.RESET_ALL}")
+        print(f"\n{Fore.BLUE}Новое сообщение от {sender}: {Style.RESET_ALL}")
         print(f"{Fore.BLUE}{message}{Style.RESET_ALL}")
         print("\nВведите адрес получателя и сообщение (или 'exit' для выхода):")
     
