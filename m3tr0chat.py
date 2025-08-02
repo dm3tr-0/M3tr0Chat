@@ -71,12 +71,24 @@ def start_tor():
     tor_path = get_tor_path()
     if not os.path.exists(tor_path):
         raise FileNotFoundError(f"Tor не найден по пути: {tor_path}")
-
+    
+    def print_progress(line):
+        if "Bootstrapped" in line:
+            percent = int(line[line.index('%')-2:line.index('%')].replace('00', '100'))
+            spinner = ['|', '/', '-', '\\', '|', '/', '-', '\\'][int(percent/10)%8]
+            
+            bar_length = 20
+            filled = int(bar_length * percent / 100)
+            bar = '▓' * filled + '░' * (bar_length - filled)
+            
+            sys.stdout.write(f"\r{Fore.YELLOW}{spinner} {bar} {percent}%{Style.RESET_ALL}")
+            if percent != 100:
+                sys.stdout.flush()
     tor_process = launch_tor_with_config(
         config = get_tor_config(),
         tor_cmd=tor_path,  # Явный путь к Tor
         take_ownership=True,  # Убить процесс при выходе
-        init_msg_handler=lambda line: print(f"{Fore.YELLOW}{str(line[line.index('%') - 2:line.index('%') + 1])}{Style.RESET_ALL}") if ("Bootstrapped" in line and "100" not in line) else None,
+        init_msg_handler=lambda line: print_progress(line)
     )
     return tor_process
 
@@ -99,10 +111,14 @@ def receive_message():
     message = request.form.get('message', '')
     
     if message:
-        sender, message = message.split('onion ')
-        sender = 'http://' + sender + 'onion'
+        temp = message.split('\n', 1)
+        sender = 'http://' + str(temp[0])
+        try:
+            message = str(temp[1])
+        except Exception as ex:
+            message = ''
         received_messages.append((sender, message))
-        print(f"\n{Fore.BLUE}Новое сообщение от {sender}: {Style.RESET_ALL}")
+        print(f"\n{Fore.BLUE}Новое сообщение от {sender} : {Style.RESET_ALL}")
         print(f"{Fore.BLUE}{message}{Style.RESET_ALL}")
         print("\nВведите адрес получателя и сообщение (или 'exit' для выхода):")
     
@@ -134,8 +150,8 @@ def send_message(target_onion, message):
         
         response = session.post(
             url,
-            data={'message': str(onion_address)+ '\n' + str(message)},
-            timeout=30,
+            data={'message': str('http' + str(onion_address))+ '\n' + str(message)},
+            timeout=50,
             headers={'Connection': 'close'}
         )
         
@@ -177,8 +193,8 @@ def main():
     try:
         # Запускаем Tor
         tor_process = start_tor()
-        print(f"{Fore.GREEN}[+] Вы вошли в сеть (PID: {tor_process.pid}){Style.RESET_ALL}")
-        
+        print(f"{Fore.GREEN}\n[+] Вы вошли в сеть (PID: {tor_process.pid}){Style.RESET_ALL}")
+        print(f"{Fore.LIGHTMAGENTA_EX}[!] Дождитесь получения своего адреса...{Style.RESET_ALL}")
         # Запускаем Flask в отдельном потоке
         flask_thread = threading.Thread(target=run_flask_app, daemon=True)
         flask_thread.start()
