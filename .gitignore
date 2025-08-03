@@ -2,3 +2,6 @@ tor_data/
 .vscode/
 venv/
 m3tr0chat.exe
+dist/
+build/
+m3tr0chat.spec
