@@ -23,6 +23,8 @@ LOCAL_PORT = 5000  # Порт для локального сервера
 onion_address = None 
 app = Flask(__name__)
 received_messages = []
+received_friends = []
+friends = []
 
 bridge_bin = ''
 
@@ -111,7 +113,7 @@ def run_flask_app():
 @app.route('/message', methods=['POST'])
 def receive_message():
     """Обрабатывает входящие сообщения"""
-    sender = request.remote_addr
+    sender = 'anonymous'
     message = request.form.get('message', '')
     
     if message:
@@ -191,6 +193,28 @@ def message_loop():
             
         send_message(target_onion, message)
 
+
+@app.route('/friend', methods=['POST'])
+def get_friend_request():
+    """Обрабатывает входящие сообщения"""
+    sender = 'anonymous'
+    person = request.form.get('friend', '')
+    
+    if person:
+        temp = person.split('\n', 1)
+        sender = str(temp[0])
+        try:
+            person = str(temp[1])
+        except Exception as ex:
+            person = ''
+        received_friends.append(sender)
+        print(f"\n{Fore.BLUE}Новая заявка от {sender} : {Style.RESET_ALL}")
+        print("\nВведите адрес получателя и сообщение (или 'exit' для выхода):")
+    
+    return "OK"
+
+def send_friend_request(target_onion):
+    pass
 
 
 def main():
