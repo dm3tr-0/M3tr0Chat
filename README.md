@@ -4,9 +4,8 @@
 
 M3tr0Chat — децентрализованный мессенджер с архитектурой «пользователь-пользователь» (P2P). Весь трафик маршрутизируется через сеть Tor, нет центральных серверов, переписки хранятся только локально.
 
-![Tor Onion Routing](https://gitlab.torproject.org/uploads/-/system/project/avatar/426/tor_logo.png?width=48) 
+![Tor Onion Routing](https://gitlab.torproject.org/uploads/-/system/project/avatar/426/tor_logo.png?width=48) <img width="64" height="64" alt="aed45d8a-1488-41e0-9560-e678ac9894b5-4" src="https://github.com/user-attachments/assets/eb47f464-8846-4f3b-b304-79fb3579fefa" />
 
-<img width="48" height="48" alt="aed45d8a-1488-41e0-9560-e678ac9894b5-3" src="https://github.com/user-attachments/assets/48b810a3-50c5-4568-a472-b5a77e9bcda1" />
 ---
 
 ## 🌐 Текущие возможности
