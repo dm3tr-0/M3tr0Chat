@@ -46,7 +46,7 @@ M3tr0Chat — децентрализованный мессенджер с ар�
 
 ## 🤝 Поддержка проекта
 
-    ⭐ Поставьте звезду на GitHub
-    🐞 Сообщайте об ошибках через Issues
-    💡 Предлагайте улучшения через Pull Requests или m3@dm3tr0.ru
-    ☕ Поддержите разработку: ```bc1qnrhxhcaylcd7uxumkjedcg4s5mf83zyny34u5m``` (Bitcoin)
+<p>⭐ Поставьте звезду на GitHub</p>
+<p>🐞 Сообщайте об ошибках через Issues</p>
+<p>💡 Предлагайте улучшения через Pull Requests или me@dm3tr0.ru</p>
+<p>☕ Поддержите разработку: ```bc1qnrhxhcaylcd7uxumkjedcg4s5mf83zyny34u5m``` (Bitcoin)</p>
