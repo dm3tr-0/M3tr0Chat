@@ -11,7 +11,7 @@ VSVersionInfo(
           "040904b0",
           [StringStruct("CompanyName", "dm3tr0"),
           StringStruct("FileDescription", "M3tr0Chat - Secure Messenger"),
-          StringStruct("LegalCopyright", "© 2025 dm3tr0"),
+          StringStruct("LegalCopyright", "© 2026 dm3tr0"),
           StringStruct("OriginalFilename", "m3tr0chat.exe")])
       ]),
     VarFileInfo([VarStruct("Translation", [1033, 1200])])

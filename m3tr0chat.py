@@ -47,20 +47,8 @@ def get_tor_config():
         #"ClientTransportPlugin": "obfs4 exec ./tor/obfs4proxy.exe",
         "ClientTransportPlugin": "snowflake,obfs4,meek_lite,obfs2,obfs3,scramblesuit,webtunnel exec ./tor/pluggable_transports/lyrebird.exe",
         "Bridge":[
-            "snowflake 192.0.2.3:80 2B280B23E1107BB62ABFC40DDCC8824814F80A72 fingerprint=2B280B23E1107BB62ABFC40DDCC8824814F80A72 url=https://1098762253.rsc.cdn77.org/ fronts=www.cdn77.com,www.phpmyadmin.net ice=stun:stun.antisip.com:3478,stun:stun.epygi.com:3478,stun:stun.uls.co.za:3478,stun:stun.voipgate.com:3478,stun:stun.mixvoip.com:3478,stun:stun.nextcloud.com:3478,stun:stun.bethesda.net:3478,stun:stun.nextcloud.com:443 utls-imitate=hellorandomizedalpn",
-            "snowflake 192.0.2.4:80 8838024498816A039FCBBAB14E6F40A0843051FA fingerprint=8838024498816A039FCBBAB14E6F40A0843051FA url=https://1098762253.rsc.cdn77.org/ fronts=www.cdn77.com,www.phpmyadmin.net ice=stun:stun.antisip.com:3478,stun:stun.epygi.com:3478,stun:stun.uls.co.za:3478,stun:stun.voipgate.com:3478,stun:stun.mixvoip.com:3478,stun:stun.nextcloud.com:3478,stun:stun.bethesda.net:3478,stun:stun.nextcloud.com:443 utls-imitate=hellorandomizedalpn",
-            "obfs4 192.95.36.142:443 CDF2E852BF539B82BD10E27E9115A31734E378C2 cert=qUVQ0srL1JI/vO6V6m/24anYXiJD3QP2HgzUKQtQ7GRqqUvs7P+tG43RtAqdhLOALP7DJQ iat-mode=1",
-            "obfs4 37.218.245.14:38224 D9A82D2F9C2F65A18407B1D2B764F130847F8B5D cert=bjRaMrr1BRiAW8IE9U5z27fQaYgOhX1UCmOpg2pFpoMvo6ZgQMzLsaTzzQNTlm7hNcb+Sg iat-mode=0",
-            "obfs4 85.31.186.98:443 011F2599C0E9B27EE74B353155E244813763C3E5 cert=ayq0XzCwhpdysn5o0EyDUbmSOx3X/oTEbzDMvczHOdBJKlvIdHHLJGkZARtT4dcBFArPPg iat-mode=0",
-            "obfs4 85.31.186.26:443 91A6354697E6B02A386312F68D82CF86824D3606 cert=PBwr+S8JTVZo6MPdHnkTwXJPILWADLqfMGoVvhZClMq/Urndyd42BwX9YFJHZnBB3H0XCw iat-mode=0",
-            "obfs4 193.11.166.194:27015 2D82C2E354D531A68469ADF7F878FA6060C6BACA cert=4TLQPJrTSaDffMK7Nbao6LC7G9OW/NHkUwIdjLSS3KYf0Nv4/nQiiI8dY2TcsQx01NniOg iat-mode=0",
-            "obfs4 193.11.166.194:27020 86AC7B8D430DAC4117E9F42C9EAED18133863AAF cert=0LDeJH4JzMDtkJJrFphJCiPqKx7loozKN7VNfuukMGfHO0Z8OGdzHVkhVAOfo1mUdv9cMg iat-mode=0",
-            "obfs4 193.11.166.194:27025 1AE2C08904527FEA90C4C4F8C1083EA59FBC6FAF cert=ItvYZzW5tn6v3G4UnQa6Qz04Npro6e81AP70YujmK/KXwDFPTs3aHXcHp4n8Vt6w/bv8cA iat-mode=0",
-            "obfs4 209.148.46.65:443 74FAD13168806246602538555B5521A0383A1875 cert=ssH+9rP8dG2NLDN2XuFw63hIO/9MNNinLmxQDpVa+7kTOa9/m+tGWT1SmSYpQ9uTBGa6Hw iat-mode=0",
-            "obfs4 146.57.248.225:22 10A6CD36A537FCE513A322361547444B393989F0 cert=K1gDtDAIcUfeLqbstggjIw2rtgIKqdIhUlHp82XRqNSq/mtAjp1BIC9vHKJ2FAEpGssTPw iat-mode=0",
-            "obfs4 45.145.95.6:27015 C5B7CD6946FF10C5B3E89691A7D3F2C122D2117C cert=TD7PbUO0/0k6xYHMPW3vJxICfkMZNdkRrb63Zhl5j9dW3iRGiCx0A7mPhe5T2EDzQ35+Zw iat-mode=0",
-            "obfs4 51.222.13.177:80 5EDAC3B810E12B01F6FD8050D2FD3E277B289A08 cert=2uplIpLQ0q9+0qMFrK5pkaYRDOe460LL9WHBvatgkuRr/SL31wBOEupaMMJ6koRE6Ld0ew iat-mode=0",
-            "meek_lite 192.0.2.20:80 url=https://1603026938.rsc.cdn77.org front=www.phpmyadmin.net utls=HelloRandomizedALPN"
+            "obfs4 79.168.181.215:9443 ECE22C048DAE263C39BE32DCA7D7ECC26317A8AC cert=jo2QZLNtojsoUDr7tVnj4q4i/cTvNnD29kD7Sq2UwnZ5wyI0GGu2BhSjx8p+otsOM/u3Qw iat-mode=0",
+            "obfs4 93.55.88.235:8081 13DDD2BED74D068AFF3EEE2B9D13C4E4D4667DDA cert=bez4elSLBpp58h6fml9ecJ/epgNWFFAE6YsXz41emzHE/YMCZaBsxPMtBcFA+JoxydDbag iat-mode=0"
             ],
         "ConnectionPadding": "1",
         "ReducedConnectionPadding": "0",
@@ -78,18 +66,19 @@ def start_tor():
     if not os.path.exists(tor_path):
         raise FileNotFoundError(f"Tor не найден по пути: {tor_path}")
     
-    def print_progress(line):
+    def print_progress(line, percent = 1):
         if "Bootstrapped" in line:
             percent = int(line[line.index('%')-2:line.index('%')].replace('00', '100'))
-            spinner = ['|', '/', '-', '\\', '|', '/', '-', '\\'][int(percent/10)%8]
+        spinner = ['|', '/', '-', '\\', '|', '/', '-', '\\'][int(percent/10)%8]
             
-            bar_length = 20
-            filled = int(bar_length * percent / 100)
-            bar = '▓' * filled + '░' * (bar_length - filled)
+        bar_length = 20
+        filled = int(bar_length * percent / 100)
+        bar = '▓' * filled + '░' * (bar_length - filled)
             
-            sys.stdout.write(f"\r{Fore.YELLOW}{spinner} {bar} {percent}%{Style.RESET_ALL}")
-            if percent != 100:
-                sys.stdout.flush()
+        sys.stdout.write(f"\r{Fore.YELLOW}{spinner} {bar} {line}{Style.RESET_ALL}")
+        if percent != 100:
+            sys.stdout.flush()
+            
     tor_process = launch_tor_with_config(
         config = get_tor_config(),
         tor_cmd=tor_path,  # Явный путь к Tor
