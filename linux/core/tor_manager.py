@@ -89,7 +89,11 @@ class TorManager:
         tor_path = self.get_tor_path()
         if not os.path.exists(tor_path):
             raise FileNotFoundError(f"Tor не найден по пути: {tor_path}")
-        
+        if not os.access(tor_path, os.X_OK):
+            try:
+                os.chmod(tor_path, 0o755)
+            except Exception as e:
+                print(f"{Fore.RED}[!] Не удалсь установить права. Попробуйте в ручную: chmod +x {tor_path}{Style.RESET_ALL}")
         try:
             self.tor_process = launch_tor_with_config(
                 config=self.get_tor_config(),
@@ -190,4 +194,5 @@ class TorManager:
                 try:
                     self.tor_process.kill()
                 except:
+
                     pass
