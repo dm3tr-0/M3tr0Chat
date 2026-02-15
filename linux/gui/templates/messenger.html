@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M3tr0Chat — Анонимный мессенджер через Tor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Roboto:wght@300;400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --neon-green: #00ff9d;
+            --neon-green-glow: 0 0 15px #00ff9d, 0 0 30px #00ff9d, 0 0 45px #00ff9d;
+            --dark-bg: #0a0f0d;
+            --darker-bg: #050807;
+            --text-primary: #e0f7fa;
+            --text-secondary: #80cbc4;
+            --border-color: #1a3a32;
+            --success: #00c853;
+            --warning: #ffab00;
+            --danger: #ff1744;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            color: var(--text-primary);
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            overflow-x: hidden;
+            position: relative;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 157, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(0, 255, 157, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(0, 255, 157, 0.02) 0%, transparent 30%);
+            z-index: -1;
+        }
+        
+        .scanline {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                transparent 0%,
+                rgba(10, 15, 13, 0.05) 50%,
+                transparent 100%
+            );
+            background-size: 100% 4px;
+            pointer-events: none;
+            z-index: -1;
+            animation: scanline 8s linear infinite;
+        }
+        
+        @keyframes scanline {
+            0% {
+                background-position: 0 0;
+            }
+            100% {
+                background-position: 0 100vh;
+            }
+        }
+        
+        .noise {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdmFsdWVzPSIwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwLjA1IDAiLz48L2ZpbHRlcj48cmVjdCB3aWR0aD0iMzAwJSIgaGVpZ2h0PSIzMDAlIiBmaWx0ZXI9InVybCgjYSkiLz48L3N2Zz4=');
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        header {
+            background: rgba(10, 15, 13, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+        }
+        
+        .header-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--dark-bg) 0%, var(--darker-bg) 100%);
+            border: 2px solid var(--neon-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            background: conic-gradient(
+                transparent,
+                var(--neon-green) 25%,
+                transparent 50%,
+                var(--neon-green) 75%,
+                transparent
+            );
+            animation: rotate 4s linear infinite;
+        }
+        
+        .logo-icon::after {
+            content: '🔒';
+            position: absolute;
+            font-size: 1.5rem;
+            z-index: 1;
+        }
+        
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--neon-green), #00e68a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+            letter-spacing: 1px;
+        }
+        
+        nav ul {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        
+        nav a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            padding: 0.5rem 0;
+        }
+        
+        nav a:hover {
+            color: var(--neon-green);
+        }
+        
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--neon-green);
+            transition: width 0.3s ease;
+        }
+        
+        nav a:hover::after {
+            width: 100%;
+        }
+        
+        .hero {
+            padding: 6rem 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, rgba(0, 255, 157, 0.05) 0%, transparent 70%);
+            z-index: -1;
+        }
+        
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(90deg, var(--neon-green), #00e68a, var(--neon-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: var(--neon-green-glow);
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                text-shadow: var(--neon-green-glow);
+            }
+            50% {
+                text-shadow: 0 0 20px #00ff9d, 0 0 40px #00ff9d, 0 0 60px #00ff9d;
+            }
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto 2rem;
+            color: var(--text-secondary);
+        }
+        
+        .tagline {
+            display: inline-block;
+            background: rgba(0, 255, 157, 0.1);
+            border: 1px solid var(--neon-green);
+            padding: 0.5rem 1.5rem;
+            border-radius: 25px;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            box-shadow: 0 0 10px rgba(0, 255, 157, 0.2);
+            animation: glow 2s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% {
+                box-shadow: 0 0 10px rgba(0, 255, 157, 0.2);
+            }
+            50% {
+                box-shadow: 0 0 20px rgba(0, 255, 157, 0.4);
+            }
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--neon-green), #00e68a);
+            color: var(--dark-bg);
+            padding: 1rem 3rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            text-decoration: none;
+            border-radius: 30px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: var(--neon-green-glow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+        
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--neon-green), #00e68a);
+            z-index: -1;
+            transition: transform 0.5s ease;
+            transform: scaleX(0);
+            transform-origin: left;
+        }
+        
+        .cta-button:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 30px rgba(0, 255, 157, 0.5);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            color: var(--neon-green);
+            text-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+            position: relative;
+            display: inline-block;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--neon-green);
+            box-shadow: 0 0 10px var(--neon-green);
+        }
+        
+        .features, .limitations, .roadmap {
+            margin-bottom: 4rem;
+        }
+        
+        .features-grid, .limitations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .feature-card, .limitation-card {
+            background: rgba(10, 15, 13, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .feature-card::before, .limitation-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--neon-green), transparent);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover::before, .limitation-card:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .feature-card:hover, .limitation-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--neon-green);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .feature-icon, .limitation-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-card .feature-icon {
+            color: var(--success);
+            text-shadow: 0 0 15px rgba(0, 200, 83, 0.5);
+        }
+        
+        .limitation-card .limitation-icon {
+            color: var(--warning);
+            text-shadow: 0 0 15px rgba(255, 171, 0, 0.5);
+        }
+        
+        .feature-title, .limitation-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: var(--neon-green);
+        }
+        
+        .feature-desc, .limitation-desc {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+        
+        .roadmap-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+            background: rgba(10, 15, 13, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        
+        .roadmap-table th {
+            background: rgba(0, 255, 157, 0.1);
+            padding: 1.5rem;
+            text-align: left;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--neon-green);
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .roadmap-table td {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .roadmap-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        .roadmap-table tr:hover {
+            background: rgba(0, 255, 157, 0.05);
+        }
+        
+        .status-planned {
+            display: inline-block;
+            background: rgba(255, 171, 0, 0.2);
+            color: var(--warning);
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        
+        .download-section {
+            background: linear-gradient(135deg, rgba(10, 15, 13, 0.9) 0%, rgba(5, 8, 7, 0.95) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 3rem;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .download-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(
+                transparent,
+                rgba(0, 255, 157, 0.1) 25%,
+                transparent 50%,
+                rgba(0, 255, 157, 0.1) 75%,
+                transparent
+            );
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+        
+        .code-block {
+            background: rgba(0, 0, 0, 0.7);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 2rem 0;
+            overflow-x: auto;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: '$';
+            position: absolute;
+            left: 1rem;
+            top: 1rem;
+            color: var(--neon-green);
+            font-weight: bold;
+        }
+        
+        .code-block code {
+            color: var(--neon-green);
+        }
+        
+        .warning-box {
+            background: rgba(255, 23, 68, 0.1);
+            border-left: 4px solid var(--danger);
+            padding: 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin: 2rem 0;
+        }
+        
+        .warning-box h4 {
+            color: var(--danger);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .warning-box h4::before {
+            content: '⚠️';
+        }
+        
+        footer {
+            background: rgba(5, 8, 7, 0.95);
+            border-top: 1px solid var(--border-color);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+        
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .social-link {
+            width: 50px;
+            height: 50px;
+            background: rgba(10, 15, 13, 0.7);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .social-link:hover {
+            background: var(--neon-green);
+            color: var(--dark-bg);
+            transform: translateY(-3px);
+            box-shadow: var(--neon-green-glow);
+        }
+        
+        .copyright {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            nav ul {
+                gap: 1rem;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.2rem;
+            }
+            
+            .section-title {
+                font-size: 2rem;
+            }
+            
+            .features-grid, .limitations-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .download-section {
+                padding: 2rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    <div class="noise"></div>
+    
+    <header>
+        <div class="header-container">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <div class="logo-text">M3tr0Chat</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#features">Возможности</a></li>
+                    <li><a href="#limitations">Ограничения</a></li>
+                    <li><a href="#roadmap">Планы</a></li>
+                    <li><a href="#contact">Контакты</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="tagline">Анонимный мессенджер через Tor</div>
+        <h1>M3tr0Chat</h1>
+        <p>Децентрализованный мессенджер с архитектурой «пользователь-пользователь». Весь трафик маршрутизируется через сеть Tor, нет центральных серверов, переписки хранятся только локально.</p>
+        <a href="https://github.com/dm3tr-0/M3tr0Chat" class="cta-button">Скачать сейчас</a>
+    </section>
+    
+    <section class="container" id="features">
+        <h2 class="section-title">Текущие возможности</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="feature-icon">✉️</div>
+                <h3 class="feature-title">Отправка сообщений</h3>
+                <p class="feature-desc">Отправка текстовых сообщений через .onion-адреса с автоматическим созданием временного onion-сервиса при запуске.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🌉</div>
+                <h3 class="feature-title">Работа через мосты</h3>
+                <p class="feature-desc">Поддержка мостов Tor (obfs4/snowflake) для обхода блокировок в странах с цензурой интернета.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💻</div>
+                <h3 class="feature-title">Кроссплатформенность</h3>
+                <p class="feature-desc">Основа приложения работает на Windows, Linux и macOS с возможностью компиляции в нативный бинарник.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🎨</div>
+                <h3 class="feature-title">CLI-интерфейс</h3>
+                <p class="feature-desc">Цветной консольный интерфейс с индикацией статусов и удобной навигацией.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="container" id="limitations">
+        <h2 class="section-title">Ограничения</h2>
+        <div class="limitations-grid">
+            <div class="limitation-card">
+                <div class="limitation-icon">🔴</div>
+                <h3 class="limitation-title">Онлайн одновременно</h3>
+                <p class="limitation-desc">Оба собеседника должны быть онлайн одновременно для обмена сообщениями.</p>
+            </div>
+            <div class="limitation-card">
+                <div class="limitation-icon">🔴</div>
+                <h3 class="limitation-title">Нет звонков</h3>
+                <p class="limitation-desc">Нет звонков и видеозвонков из-за низкой скорости сети Tor.</p>
+            </div>
+            <div class="limitation-card">
+                <div class="limitation-icon">🔴</div>
+                <h3 class="limitation-title">Нет групповых чатов</h3>
+                <p class="limitation-desc">В текущей версии отсутствует поддержка групповых чатов.</p>
+            </div>
+            <div class="limitation-card">
+                <div class="limitation-icon">🔴</div>
+                <h3 class="limitation-title">Долгий первый запуск</h3>
+                <p class="limitation-desc">Первый запуск занимает несколько минут из-за инициализации Tor и загрузки дескрипторов.</p>
+            </div>
+            <div class="limitation-card">
+                <div class="limitation-icon">🔴</div>
+                <h3 class="limitation-title">Пароль не восстанавливается</h3>
+                <p class="limitation-desc">При потере пароля восстановить переписки невозможно — это особенность шифрования.</p>
+            </div>
+            <div class="limitation-card">
+                <div class="limitation-icon">🔴</div>
+                <h3 class="limitation-title">Требуются мосты</h3>
+                <p class="limitation-desc">В России и других странах с блокировками требуется настройка мостов Tor для работы.</p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="container" id="roadmap">
+        <h2 class="section-title">Планы развития</h2>
+        <table class="roadmap-table">
+            <thead>
+                <tr>
+                    <th>Фича</th>
+                    <th>Статус</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>🔐 Сквозное шифрование (на базе <code>libsodium</code>)</td>
+                    <td><span class="status-planned">Планируется</span></td>
+                </tr>
+                <tr>
+                    <td>💾 Локальное шифрование базы данных (AES-256 + PBKDF2)</td>
+                    <td><span class="status-planned">Планируется</span></td>
+                </tr>
+                <tr>
+                    <td>👥 Система друзей / чёрный список</td>
+                    <td><span class="status-planned">Планируется</span></td>
+                </tr>
+                <tr>
+                    <td>🖼️ Отправка файлов (картинки/видео)</td>
+                    <td><span class="status-planned">Планируется</span></td>
+                </tr>
+                <tr>
+                    <td>🎨 Кастомизация интерфейса через CSS</td>
+                    <td><span class="status-planned">Планируется</span></td>
+                </tr>
+                <tr>
+                    <td>🔄 Автоматическое обновление</td>
+                    <td><span class="status-planned">Планируется</span></td>
+                </tr>
+                <tr>
+                    <td>📱 GUI-версия (PyQt6)</td>
+                    <td><span class="status-planned">Планируется</span></td>
+                </tr>
+                <tr>
+                    <td>⚠️ Защита от скриншотов</td>
+                    <td><span class="status-planned">Планируется</span></td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    
+    <section class="container" id="contact">
+        <h2 class="section-title">Контакты</h2>
+        <div class="download-section">
+            <h3>📧 Поддержка проекта</h3>
+            <p style="text-align: center; margin: 2rem 0; font-size: 1.1rem;">
+                🐞 Сообщайте об ошибках через <strong>Issues</strong><br>
+                💡 Предлагайте улучшения через <strong>Pull Requests</strong><br>
+                📧 Email: <strong>me@dm3tr0.ru</strong>
+		₿  BTC: <strong>bc1qnrhxhcaylcd7uxumkjedcg4s5mf83zyny34u5m</strong>
+            </p>
+            
+            <div class="social-links">
+                <a href="https://github.com/dm3tr-0/" class="social-link" target="_blank">git</a>
+                <a href="https://t.me/CEO_dm3tr0" class="social-link" target="_blank">tg</a>
+                <a href="mailto:me@dm3tr0.ru" class="social-link" target="_blank">✉️</a>
+            </div>
+            
+            <div class="warning-box">
+                <h4>Работа в России</h4>
+                <p>Для обхода блокировок требуется использовать мосты Tor. Получите актуальные мосты через <a href="https://t.me/GetBridgesBot" style="color: var(--neon-green); text-decoration: none;">@GetBridgesBot</a> и укажите их в настройках приложения.</p>
+                <p style="margin-top: 1rem;">💡 Рекомендуется периодически обновлять мосты. Альтернативный способ — сидеть через впн-провайдера без серверов в РФ и низкой популярностью.</p>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="footer-content">
+            <div class="logo" style="justify-content: center; margin-bottom: 2rem;">
+                <div class="logo-icon"></div>
+                <div class="logo-text">M3tr0Chat</div>
+            </div>
+            <p style="color: var(--text-secondary); margin-bottom: 1rem;">© 2026 M3tr0Chat. Все права защищены.</p>
+            <p class="copyright">⚠️ Использование Tor легально в большинстве стран, но может нарушать правила некоторых провайдеров. Проверьте законодательство вашей страны.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Плавная прокрутка к якорям
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    window.scrollTo({
+                        top: target.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Анимация появления карточек при прокрутке
+        const observerOptions = {
+            threshold: 0.1
+        };
+        
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+        
+        document.querySelectorAll('.feature-card, .limitation-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>

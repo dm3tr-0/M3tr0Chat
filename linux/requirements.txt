@@ -1,0 +1,12 @@
+flask==2.3.3
+flask-socketio==5.3.4
+stem==1.8.2
+colorama==0.4.6
+requests==2.31.0
+urllib3==1.26.18
+python-socketio==5.9.0
+eventlet==0.33.3
+certifi==2023.11.17
+charset-normalizer==3.3.2
+idna==3.6
+six==1.16.0

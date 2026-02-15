@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M3TR0 Chat</title>
+    <link rel="stylesheet" href="/static/css/neon-dark.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <style href="/static/css/neon-dark.css"></style>
+</head>
+<body>
+    <!-- окно нового чата -->
+    <div id="newChatModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Новый чат</h3>
+                <button class="close-btn" onclick="closeNewChatModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="input-group">
+                    <label>Адрес друга (.onion):</label>
+                    <input type="text" id="new-chat-address" placeholder="example.onion" class="modal-input">
+                </div>
+                <div class="input-group">
+                    <label>Имя друга:</label>
+                    <input type="text" id="new-chat-name" placeholder="Имя друга" class="modal-input">
+                </div>
+                <button class="btn-primary" onclick="createNewChat()">Создать чат</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Боковая панель -->
+        <div class="sidebar">
+            <!-- Заголовок -->
+            <div class="sidebar-header">
+                <div class="logo">
+                    <i class="fas fa-user-secret"></i>
+                    <h1>M3TR0Chat</h1>
+                </div>
+                <div class="status-indicator">
+                    <div class="status-dot" id="connection-status"></div>
+                    <span id="status-text">Подключение...</span>
+                </div>
+            </div>
+
+            <!-- Кнопка нового чата -->
+            <div class="new-chat-btn">
+                <button onclick="showNewChatModal()">
+                    <i class="fas fa-plus"></i>
+                    Новый чат
+                </button>
+            </div>
+
+            <!-- Список чатов -->
+            <div class="chats-list">
+                <div class="chats-header">
+                    <h3>Чаты</h3>
+                    <span class="badge" id="chats-count">0</span>
+                </div>
+                <div class="chats-container" id="chats-container">
+                    <!-- Чаты будут добавляться здесь динамически -->
+                    <div class="empty-chats">
+                        <i class="fas fa-comments"></i>
+                        <p>Нет чатов</p>
+                        <p>Нажмите "+ Новый чат" чтобы начать</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ваш onion адрес -->
+            <div class="user-onion">
+                <div class="onion-header">
+                    <h4>Ваш адрес:</h4>
+                    <button class="copy-btn-small" onclick="copyOnionAddress()">
+                        <i class="fas fa-copy"></i>
+                    </button>
+                </div>
+                <div class="onion-address" id="my-onion-address">Загрузка...</div>
+            </div>
+        </div>
+
+        <!-- Основная область чата -->
+        <div class="main-chat">
+            <!-- Заголовок чата (скрыт по умолчанию) -->
+            <div class="chat-header" id="chat-header" style="display: none;">
+                <div class="header-left">
+                    <button class="back-btn" onclick="backToChats()">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <div class="chat-partner">
+                        <div class="partner-avatar" id="current-chat-avatar">
+                            <i class="fas fa-user"></i>
+                        </div>
+                        <div class="partner-info">
+                            <h2 id="current-chat-name">Имя друга</h2>
+                            <span class="online-status" id="chat-status">Был(а) недавно</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <div class="connection-info">
+                        <span class="tor-indicator">
+                            <i class="fas fa-circle"></i>
+                            Tor
+                        </span>
+                        <span class="encryption-indicator">
+                            <i class="fas fa-lock"></i>
+                            Шифрование
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Область сообщений -->
+            <div class="messages-area" id="messages-area">
+                <div class="no-chat-selected" id="no-chat-selected">
+                    <div class="welcome-screen">
+                        <i class="fas fa-comment-slash"></i>
+                        <h2>Выберите чат</h2>
+                        <p>Выберите существующий чат или создайте новый</p>
+                    </div>
+                </div>
+
+                <!-- Контейнер сообщений (скрыт по умолчанию) -->
+                <div class="messages-container" id="messages-container" style="display: none;">
+                    <!-- Сообщения будут добавляться здесь -->
+                    <div class="chat-empty" id="chat-empty">
+                        <p>Нет сообщений</p>
+                        <p>Напишите первое сообщение!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Поле ввода (скрыто по умолчанию) -->
+            <div class="message-input-area" id="message-input-area" style="display: none;">
+                <div class="input-wrapper">
+                    <button class="btn-icon" title="Прикрепить файл">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <input type="text" 
+                           id="message-input" 
+                           placeholder="Введите сообщение..."
+                           onkeypress="handleKeyPress(event)">
+                    <div class="input-actions">
+                        <button class="btn-icon" title="Смайлики">
+                            <i class="fas fa-smile"></i>
+                        </button>
+                        <button id="send-btn" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="message-info">
+                    <span class="delivery-status" id="delivery-status">
+                        <i class="fas fa-check"></i>
+                        Сообщения защищены
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
