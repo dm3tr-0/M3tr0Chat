@@ -1,0 +1,13 @@
+{
+  "socks_port": 9050,
+  "control_port": 9051,
+  "data_directory": "./tor_data",
+  "use_bridges": true,
+  "bridges": [
+    "obfs4 79.168.181.215:9443 ECE22C048DAE263C39BE32DCA7D7ECC26317A8AC cert=jo2QZLNtojsoUDr7tVnj4q4i/cTvNnD29kD7Sq2UwnZ5wyI0GGu2BhSjx8p+otsOM/u3Qw iat-mode=0",
+    "obfs4 93.55.88.235:8081 13DDD2BED74D068AFF3EEE2B9D13C4E4D4667DDA cert=bez4elSLBpp58h6fml9ecJ/epgNWFFAE6YsXz41emzHE/YMCZaBsxPMtBcFA+JoxydDbag iat-mode=0"
+  ],
+  "local_port": 5001,
+  "persistent_onion": true,
+  "onion_key_file": "./tor_data/private_key"
+}
