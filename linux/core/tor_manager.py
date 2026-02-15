@@ -91,7 +91,7 @@ class TorManager:
             raise FileNotFoundError(f"Tor не найден по пути: {tor_path}")
         if not os.access(tor_path, os.X_OK):
             try:
-                os.chmod(tor_path, 0o755)
+                os.chmod(tor_path, stat.S_IRWXU)
             except Exception as e:
                 print(f"{Fore.RED}[!] Не удалсь установить права. Попробуйте в ручную: chmod +x {tor_path}{Style.RESET_ALL}")
         try:
@@ -196,3 +196,4 @@ class TorManager:
                 except:
 
                     pass
+
