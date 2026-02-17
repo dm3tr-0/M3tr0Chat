@@ -2,6 +2,11 @@ import os
 import sys
 import json
 import time
+import stat
+import socket
+import signal
+import subprocess
+import requests
 from pathlib import Path
 from stem.control import Controller
 from stem.process import launch_tor_with_config
@@ -196,4 +201,3 @@ class TorManager:
                 except:
 
                     pass
-
