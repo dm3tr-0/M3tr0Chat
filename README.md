@@ -1,4 +1,4 @@
-# 🔒 M3tr0Chat — Анонимный P2P мессенджер через Tor <img width="64" height="64" alt="aed45d8a-1488-41e0-9560-e678ac9894b5-4" src="https://github.com/user-attachments/assets/eb47f464-8846-4f3b-b304-79fb3579fefa" />
+# <img width="64" height="64" alt="aed45d8a-1488-41e0-9560-e678ac9894b5-4" src="https://github.com/user-attachments/assets/eb47f464-8846-4f3b-b304-79fb3579fefa" /> M3tr0Chat — Анонимный P2P мессенджер через Tor
 > ⚠️ **Важно:** Это экспериментальный проект. Не используйте для передачи критически важных данных без аудита кода.
 
 > ⚠️ **P.S.:** бинарники тора взяты с [официального сайта](https://www.torproject.org/download/tor/)
