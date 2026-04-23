@@ -4,6 +4,7 @@
 > ⚠️ **P.S.:** бинарники тора взяты с [официального сайта](https://www.torproject.org/download/tor/)
 
 M3tr0Chat — децентрализованный мессенджер с архитектурой «пользователь-пользователь» (P2P). Весь трафик маршрутизируется через сеть Tor, нет центральных серверов, переписки хранятся только локально.
+
 ![Tor Onion Routing](https://gitlab.torproject.org/uploads/-/system/project/avatar/426/tor_logo.png?width=48) 
 
 ---
