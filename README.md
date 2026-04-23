@@ -1,12 +1,10 @@
 # 🔒 M3tr0Chat — Анонимный P2P мессенджер через Tor
-
+<img width="64" height="64" alt="aed45d8a-1488-41e0-9560-e678ac9894b5-4" src="https://github.com/user-attachments/assets/eb47f464-8846-4f3b-b304-79fb3579fefa" />
 > ⚠️ **Важно:** Это экспериментальный проект. Не используйте для передачи критически важных данных без аудита кода.
 
 > ⚠️ **P.S.:** бинарники тора взяты с [официального сайта](https://www.torproject.org/download/tor/)
 
-M3tr0Chat — децентрализованный мессенджер с архитектурой «пользователь-пользователь» (P2P). Весь трафик маршрутизируется через сеть Tor, нет центральных серверов, переписки хранятся только локально.
-
-<p> ![Tor Onion Routing](https://gitlab.torproject.org/uploads/-/system/project/avatar/426/tor_logo.png?width=48) <img width="64" height="64" alt="aed45d8a-1488-41e0-9560-e678ac9894b5-4" src="https://github.com/user-attachments/assets/eb47f464-8846-4f3b-b304-79fb3579fefa" /> </p>
+M3tr0Chat — децентрализованный мессенджер с архитектурой «пользователь-пользователь» (P2P). Весь трафик маршрутизируется через сеть Tor, нет центральных серверов, переписки хранятся только локально. ![Tor Onion Routing](https://gitlab.torproject.org/uploads/-/system/project/avatar/426/tor_logo.png?width=48) 
 
 ---
 
