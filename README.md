@@ -52,12 +52,5 @@ M3tr0Chat — децентрализованный мессенджер с ар�
 <p>☕ Поддержите разработку: Bitcoin</p>
   
   ```bc1qnrhxhcaylcd7uxumkjedcg4s5mf83zyny34u5m```
-## 🌉 Tor Bridges (obfs4)
-
-*Updated: 24.04.2026*
-
-```
-obfs4 185.177.207.251:11251 BDE1BBC62DB8EBAE17EEF369A7271512C8B29D0F cert=uG0DsVlVpmb11kIU6HoKsOphEkdpWYfoAnxUh0Z9AGL7kDVxgLTquKS5VUWaS/tijZykJA iat-mode=0 
-```
 
 ---
