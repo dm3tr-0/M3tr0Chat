@@ -54,7 +54,7 @@ obfs4 87.147.51.39:512 B2C717B2D1CF4E6F3D05E998C936EAEC4E7DC706 cert=xQ1KEMVmT8X
 
 <p>⭐ Поставьте звезду на GitHub</p>
 <p>🐞 Сообщайте об ошибках через Issues</p>
-<p>💡 Предлагайте улучшения через Pull Requests или me@dm3tr0.ru</p>
+<p>💡 Предлагайте улучшения через Pull Requests или <a href="mailto:me@dm3tr0.ru">пишите на почту</a></p>
 <p>☕ Поддержите разработку: Bitcoin</p>
   
   ```bc1qnrhxhcaylcd7uxumkjedcg4s5mf83zyny34u5m```
