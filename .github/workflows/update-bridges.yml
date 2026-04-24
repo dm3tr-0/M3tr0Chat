@@ -1,0 +1,49 @@
+name: Авто-обновление мостов Tor
+
+on:
+  schedule:
+    # Запуск каждый день в 00:00 UTC
+    - cron: '0 0 * * *'
+  # Кнопка для ручного запуска
+  workflow_dispatch:
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Обновить мосты в README
+        run: |
+          # Получаем свежие мосты
+          BRIDGES=$(curl -s "https://bridges.torproject.org/bridges/en?transport=obfs4" | \
+            grep -oP 'obfs4\s+\d+\.\d+\.\d+\.\d+:\d+\s+[A-F0-9]+\s+cert=[^"\s<]+' | \
+            head -2 | \
+            sed 's/&#43;/+/g' | \
+            sed 's/&amp;/\&/g')
+          
+          # Формируем дату
+          DATE=$(date '+%d.%m.%Y')
+          
+          # Создаем новый блок с мостами
+          cat > BRIDGES_NEW.md << 'EOF'
+## 🌉 Актуальные мосты Tor (obfs4)
+
+*Авто-обновление: каждый день в 00:00 UTC*
+
+```bash
+EOF
+          
+          # Добавляем мосты
+          echo "$BRIDGES" | while IFS= read -r bridge; do
+            if [ -n "$bridge" ]; then
+              echo "# Мост (актуальный)" >> BRIDGES_NEW.md
+              echo "$bridge" >> BRIDGES_NEW.md
+              echo "" >> BRIDGES_NEW.md
+            fi
+          done
+          
+          cat >> BRIDGES_NEW.md << 'EOF'
