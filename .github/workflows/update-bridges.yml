@@ -1,14 +1,12 @@
-name: Авто-обновление мостов Tor
+name: Update Tor Bridges
 
 on:
   schedule:
-    # Запуск каждый день в 00:00 UTC
     - cron: '0 0 * * *'
-  # Кнопка для ручного запуска
   workflow_dispatch:
 
 jobs:
-  update-readme:
+  update:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,34 +14,46 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Обновить мосты в README
+      - name: Get bridges
         run: |
-          # Получаем свежие мосты
-          BRIDGES=$(curl -s "https://bridges.torproject.org/bridges/en?transport=obfs4" | \
-            grep -oP 'obfs4\s+\d+\.\d+\.\d+\.\d+:\d+\s+[A-F0-9]+\s+cert=[^"\s<]+' | \
-            head -2 | \
-            sed 's/&#43;/+/g' | \
-            sed 's/&amp;/\&/g')
+          curl -s "https://bridges.torproject.org/bridges/en?transport=obfs4" > page.html
+          grep -o 'obfs4 [^<]*' page.html | head -2 | sed 's/&#43;/+/g' > bridges.txt
           
-          # Формируем дату
+          if [ -s bridges.txt ]; then
+            echo "BRIDGES_FOUND=true" >> $GITHUB_ENV
+            echo "BRIDGES=$(cat bridges.txt)" >> $GITHUB_ENV
+          else
+            echo "BRIDGES_FOUND=false" >> $GITHUB_ENV
+          fi
+      
+      - name: Update README
+        if: env.BRIDGES_FOUND == 'true'
+        run: |
           DATE=$(date '+%d.%m.%Y')
           
-          # Создаем новый блок с мостами
-          cat > BRIDGES_NEW.md << 'EOF'
-## 🌉 Актуальные мосты Tor (obfs4)
-
-*Авто-обновление: каждый день в 00:00 UTC*
-
-```bash
-EOF
+          cat > new_bridges.md << EOF
+          ## 🌉 Tor Bridges (obfs4)
           
-          # Добавляем мосты
-          echo "$BRIDGES" | while IFS= read -r bridge; do
-            if [ -n "$bridge" ]; then
-              echo "# Мост (актуальный)" >> BRIDGES_NEW.md
-              echo "$bridge" >> BRIDGES_NEW.md
-              echo "" >> BRIDGES_NEW.md
-            fi
-          done
+          *Updated: $DATE*
           
-          cat >> BRIDGES_NEW.md << 'EOF'
+          \`\`\`
+          ${{ env.BRIDGES }}
+          \`\`\`
+          
+          ---
+          EOF
+          
+          if grep -q "## 🌉 Tor Bridges" README.md; then
+            sed -i '/## 🌉 Tor Bridges/,/---/c\\' README.md
+          fi
+          
+          cat new_bridges.md >> README.md
+          
+      - name: Commit
+        if: env.BRIDGES_FOUND == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "actions@github.com"
+          git add README.md
+          git diff --staged --quiet || git commit -m "Update bridges ${{ env.BRIDGES }}"
+          git push
