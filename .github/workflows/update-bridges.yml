@@ -41,19 +41,17 @@ jobs:
           
           # Создаем новый блок
           cat > new_block.md << EOF
-          <!-- START_BRIDGES -->
           \`\`\`bash
           $BRIDGES_CONTENT
           \`\`\`
           **📅 Последнее обновление:** $DATE
           ---
-          <!-- END_BRIDGES -->
           EOF
           
           # Проверяем, есть ли маркеры в README
           if grep -q "<!-- START_BRIDGES -->" README.md; then
             # Удаляем строки между маркерами и вставляем новый блок
-            sed -i '/<!-- START_BRIDGES -->/,/<!-- END_BRIDGES -->/d' README.md
+            sed -i '/<!-- START_BRIDGES -->/,/<!-- END_BRIDGES -->/{//!d}' README.md
             sed -i '/<!-- START_BRIDGES -->/r new_block.md' README.md
           else
             # Добавляем после логотипа
