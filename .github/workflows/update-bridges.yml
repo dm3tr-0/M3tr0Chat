@@ -14,52 +14,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       
-      - name: Get bridges
+      - name: Get and update bridges
         run: |
-          # Получаем страницу с мостами
           curl -s "https://bridges.torproject.org/bridges/en?transport=obfs4" > page.html
-          
-          # Извлекаем ВСЕ мосты (не только первые 2)
           grep -oP 'obfs4\s+\d+\.\d+\.\d+\.\d+:\d+\s+[A-F0-9]+\s+cert=[^"\s<]+' page.html | \
             sed 's/&#43;/+/g' | \
             sed 's/&amp;/\&/g' > bridges.txt
           
-          # Подсчитываем количество
-          COUNT=$(wc -l < bridges.txt)
-          echo "Найдено мостов: $COUNT"
+          python3 << 'PYTHON'
+          from datetime import datetime
           
-          if [ "$COUNT" -gt 0 ]; then
-            echo "BRIDGES_FOUND=true" >> $GITHUB_ENV
-            # Сохраняем мосты в виде многострочной переменной
-            echo "BRIDGES<<EOF" >> $GITHUB_ENV
-            cat bridges.txt >> $GITHUB_ENV
-            echo "EOF" >> $GITHUB_ENV
-          else
-            echo "BRIDGES_FOUND=false" >> $GITHUB_ENV
-          fi
-      
-      - name: Update README with markers
-        if: env.BRIDGES_FOUND == 'true'
-        run: |
-          DATE=$(date '+%d.%m.%Y')
+          # Читаем мосты
+          with open('bridges.txt', 'r') as f:
+              bridges = f.read().strip()
           
-          # Создаем новый блок с мостами
-          cat > new_bridges.md << 'EOF'
-          <!-- START_BRIDGES -->
+          # Формируем блок
+          date = datetime.now().strftime('%d.%m.%Y')
+          new_block = f'''<!-- START_BRIDGES -->
           ## 🌉 Актуальные мосты Tor (obfs4)
           
           *Авто-обновление: каждый день в 00:00 UTC*
           
           ```bash
-          EOF
-          
-          # Добавляем каждый мост с комментарием
-          while IFS= read -r bridge; do
-            if [ -n "$bridge" ]; then
-              echo "# Мост" >> new_bridges.md
-              echo "$bridge" >> new_bridges.md
-              echo "" >> new_bridges.md
-            fi
-          done < bridges.txt
-          
-          cat >> new_bridges.md << 'EOF'
+          {bridges}
