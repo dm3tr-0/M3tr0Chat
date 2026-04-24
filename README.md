@@ -8,7 +8,12 @@ M3tr0Chat — децентрализованный мессенджер с ар�
 ![Tor Onion Routing](https://gitlab.torproject.org/uploads/-/system/project/avatar/426/tor_logo.png?width=48) 
 
 <!-- START_BRIDGES -->
-
+```bash
+obfs4 87.147.51.39:512 B2C717B2D1CF4E6F3D05E998C936EAEC4E7DC706 cert=xQ1KEMVmT8XZQHF3X2qZpfJic2di8SAiblx1fwLh1l9kw/RNI+wnxILgAy7zcQ2Mbl95UA
+obfs4 178.236.245.209:9100 A5DDBD72FD8B63EC0F2455AF8C97EE88E52E7E6B cert=/OuQ+vKEUjIqJ9rHME3ML3dwvzXSCWLw094Ic+v2wRciEoWw72POdr0eLX6D5dm7vMVnBA
+```
+**📅 Последнее обновление:** 24.04.2026
+---
 <!-- END_BRIDGES -->
 ---
 
