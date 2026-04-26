@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M3tr0Chat · p2p мессенджер через Tor</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #0a0c10;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #e6edf3;
+        }
+        .container { text-align: center; padding: 2rem; max-width: 600px; }
+        .logo {
+            font-size: 64px;
+            margin-bottom: 1rem;
+        }
+        h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #7ee787, #2f9fff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        .tagline { color: #7d8590; margin-bottom: 1.5rem; font-size: 1rem; letter-spacing: 1px; }
+        .description { margin-bottom: 2rem; line-height: 1.6; color: #b1bac4; }
+        .badge {
+            background: #1f2428;
+            border: 1px solid #30363d;
+            border-radius: 20px;
+            padding: 0.3rem 0.8rem;
+            font-size: 0.75rem;
+            color: #7ee787;
+            display: inline-block;
+            margin-bottom: 1.5rem;
+        }
+        .links a {
+            display: inline-block;
+            background: #238636;
+            color: white;
+            text-decoration: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            margin: 0.25rem;
+        }
+        .links a.github { background: #1f2428; border: 1px solid #30363d; }
+        .links a:hover { opacity: 0.85; }
+        .note { margin-top: 2rem; font-size: 0.75rem; color: #7d8590; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🔒</div>
+        <span class="badge">P2P · TOR · ANONYMOUS</span>
+        <h1>M3tr0Chat</h1>
+        <div class="tagline">анонимный p2p-мессенджер через сеть Tor</div>
+        <div class="description">
+            без серверов · без регистрации<br>
+            трафик только через Tor · open source
+        </div>
+        <div class="links">
+            <a href="https://github.com/dm3tr-0/M3tr0Chat">GitHub</a>
+        </div>
+        <div class="note">
+            ⚠️ экспериментальный проект<br>
+            не используйте для критически важных данных без аудита
+        </div>
+    </div>
+</body>
+</html>
