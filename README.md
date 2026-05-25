@@ -55,8 +55,3 @@ obfs4 24.68.77.14:60002 6FF5C5C1AE210431C5E182B73D8EB858CEA65B33 cert=QZz2IyrYLs
 <p>⭐ Поставьте звезду на GitHub</p>
 <p>🐞 Сообщайте об ошибках через Issues</p>
 <p>💡 Предлагайте улучшения через Pull Requests или <a href="mailto:me@dm3tr0.ru">пишите на почту</a></p>
-<p>☕ Поддержите разработку: Bitcoin</p>
-  
-  ```bc1qnrhxhcaylcd7uxumkjedcg4s5mf83zyny34u5m```
-
----
