@@ -23,6 +23,7 @@ obfs4 108.50.202.242:46037 C26661629B7B8E05CB11D109360D02447EB9B5B5 cert=+A3dhOm
 <p>✅ Работа через мосты Tor (obfs4) </p>
 <p>✅ Кроссплатформенная основа (Windows/Linux/macOS)  </p>
 <p>✅ web GUI-интерфейс </p>
+<img width="1366" height="636" alt="551631252-f83a927c-3047-4374-a437-38ae0f13e25d" src="https://github.com/user-attachments/assets/7bbd93c3-9bd4-4e6a-bfec-9b277bfc8cdc" />
 
 ---
 
