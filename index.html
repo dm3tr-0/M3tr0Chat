@@ -5,73 +5,828 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M3tr0Chat · p2p мессенджер через Tor</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: #0a0c10;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            color: #e6edf3;
-        }
-        .container { text-align: center; padding: 2rem; max-width: 600px; }
-        .logo {
-            font-size: 64px;
-            margin-bottom: 1rem;
-        }
-        h1 {
-            font-size: 2rem;
-            background: linear-gradient(135deg, #7ee787, #2f9fff);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            margin-bottom: 0.5rem;
-        }
-        .tagline { color: #7d8590; margin-bottom: 1.5rem; font-size: 1rem; letter-spacing: 1px; }
-        .description { margin-bottom: 2rem; line-height: 1.6; color: #b1bac4; }
-        .badge {
-            background: #1f2428;
-            border: 1px solid #30363d;
-            border-radius: 20px;
-            padding: 0.3rem 0.8rem;
-            font-size: 0.75rem;
-            color: #7ee787;
-            display: inline-block;
-            margin-bottom: 1.5rem;
-        }
-        .links a {
-            display: inline-block;
-            background: #238636;
-            color: white;
-            text-decoration: none;
-            padding: 0.7rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 500;
-            margin: 0.25rem;
-        }
-        .links a.github { background: #1f2428; border: 1px solid #30363d; }
-        .links a:hover { opacity: 0.85; }
-        .note { margin-top: 2rem; font-size: 0.75rem; color: #7d8590; }
-    </style>
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&display=swap');
+
+:root {
+    --bg: #050508;
+    --bg-card: #0a0a0f;
+    --bg-card-hover: #0e0e15;
+    --border: #1a1a2e;
+    --border-hover: #00ff88;
+    --text: #c0c0d0;
+    --text-dim: #6a6a80;
+    --accent: #00ff88;
+    --accent-dim: #00cc6a;
+    --accent-glow: rgba(0, 255, 136, 0.15);
+    --accent2: #00d4ff;
+    --accent2-glow: rgba(0, 212, 255, 0.15);
+    --danger: #ff3366;
+    --warning: #ffaa00;
+    --success: #00ff88;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    background: var(--bg);
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: var(--text);
+    line-height: 1.7;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* CRT Scanlines */
+body::before {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: repeating-linear-gradient(
+        0deg,
+        rgba(0,0,0,0.15) 0px,
+        rgba(0,0,0,0.15) 1px,
+        transparent 1px,
+        transparent 3px
+    );
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.6;
+}
+
+/* Subtle noise */
+body::after {
+    content: '';
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 9998;
+}
+
+/* Canvas background */
+#matrix-canvas {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    opacity: 0.08;
+    pointer-events: none;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Navigation */
+.nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.nav-brand {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 2px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-brand::before {
+    content: '>';
+    color: var(--accent2);
+    animation: blink 1s step-end infinite;
+}
+
+.nav-links {
+    display: flex;
+    gap: 0.3rem;
+    flex-wrap: wrap;
+}
+
+.nav-links a {
+    color: var(--text-dim);
+    text-decoration: none;
+    font-size: 0.75rem;
+    padding: 0.4rem 0.8rem;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    transition: all 0.2s;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-glow);
+    box-shadow: 0 0 15px var(--accent-glow);
+}
+
+/* Header */
+.header {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin-bottom: 3rem;
+    padding: 2rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: linear-gradient(180deg, var(--accent), var(--accent2));
+}
+
+.avatar {
+    width: 90px;
+    height: 90px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--bg);
+    box-shadow: 0 0 30px var(--accent-glow);
+    position: relative;
+    flex-shrink: 0;
+}
+
+.avatar::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 14px;
+    border: 1px solid var(--accent);
+    opacity: 0.5;
+    animation: pulse-border 2s ease-in-out infinite;
+}
+
+@keyframes pulse-border {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.7; transform: scale(1.02); }
+}
+
+.header-info h1 {
+    font-size: 2.4rem;
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: #fff;
+    margin-bottom: 0.3rem;
+}
+
+.glitch {
+    position: relative;
+}
+
+.glitch::before,
+.glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+}
+
+.glitch:hover::before {
+    animation: glitch-1 0.3s linear infinite;
+    color: var(--accent);
+    opacity: 0.8;
+    z-index: -1;
+}
+
+.glitch:hover::after {
+    animation: glitch-2 0.3s linear infinite;
+    color: var(--accent2);
+    opacity: 0.8;
+    z-index: -2;
+}
+
+@keyframes glitch-1 {
+    0%, 100% { clip-path: inset(0 0 95% 0); transform: translate(-2px, 0); }
+    20% { clip-path: inset(30% 0 50% 0); transform: translate(2px, 0); }
+    40% { clip-path: inset(60% 0 10% 0); transform: translate(-1px, 0); }
+    60% { clip-path: inset(10% 0 80% 0); transform: translate(1px, 0); }
+    80% { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 0); }
+}
+
+@keyframes glitch-2 {
+    0%, 100% { clip-path: inset(95% 0 0 0); transform: translate(2px, 0); }
+    20% { clip-path: inset(50% 0 30% 0); transform: translate(-2px, 0); }
+    40% { clip-path: inset(10% 0 60% 0); transform: translate(1px, 0); }
+    60% { clip-path: inset(80% 0 10% 0); transform: translate(-1px, 0); }
+    80% { clip-path: inset(30% 0 50% 0); transform: translate(2px, 0); }
+}
+
+.badge {
+    display: inline-block;
+    background: rgba(0,255,136,0.08);
+    border: 1px solid var(--accent);
+    border-radius: 4px;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.7rem;
+    color: var(--accent);
+    margin-top: 0.5rem;
+    letter-spacing: 1px;
+}
+
+.location {
+    color: var(--text-dim);
+    font-size: 0.8rem;
+    margin-top: 0.4rem;
+}
+
+.location::before {
+    content: '[LOC] ';
+    color: var(--accent2);
+}
+
+/* Section labels */
+.section-label {
+    font-size: 0.65rem;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.section-label::before {
+    content: '//';
+    color: var(--accent);
+}
+
+/* Cards */
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.8rem;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.card:hover {
+    border-color: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 40px rgba(0,0,0,0.4), 0 0 20px var(--accent-glow);
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card h3 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+}
+
+.card h3::before {
+    content: '>';
+    color: var(--accent2);
+    font-weight: 300;
+}
+
+.card p {
+    color: var(--text);
+    font-size: 0.85rem;
+    margin-bottom: 0.8rem;
+}
+
+.card p strong {
+    color: #fff;
+}
+
+/* Feature lists */
+.feature-list {
+    list-style: none;
+    padding: 0;
+}
+
+.feature-list li {
+    margin-bottom: 0.7rem;
+    padding-left: 1.5rem;
+    position: relative;
+    font-size: 0.82rem;
+    color: var(--text);
+}
+
+.feature-list li::before {
+    content: '[OK]';
+    position: absolute;
+    left: 0;
+    color: var(--accent);
+    font-size: 0.65rem;
+    font-weight: 600;
+}
+
+.feature-list li.disabled {
+    color: var(--text-dim);
+}
+
+.feature-list li.disabled::before {
+    content: '[--]';
+    color: var(--text-dim);
+}
+
+/* Tech tags */
+.tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.tech-tag {
+    background: rgba(0,255,136,0.05);
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 3px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.68rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 0.5px;
+}
+
+.tech-tag.highlight {
+    background: rgba(0,255,136,0.1);
+    border-color: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+
+/* Links */
+.links-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1rem;
+}
+
+.links-row a,
+.contact-links a,
+.card a {
+    color: var(--accent2);
+    text-decoration: none;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    transition: all 0.2s;
+    border-bottom: 1px solid transparent;
+}
+
+.links-row a:hover,
+.contact-links a:hover,
+.card a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    text-shadow: 0 0 8px var(--accent-glow);
+}
+
+.contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.contact-links a {
+    font-size: 0.82rem;
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--text);
+    border: none;
+    padding: 0.3rem 0;
+}
+
+.contact-links a::before {
+    content: '→ ';
+    color: var(--accent2);
+    opacity: 0.7;
+}
+
+.contact-links a:hover {
+    color: var(--accent);
+    padding-left: 0.3rem;
+}
+
+/* QR codes */
+.qr-grid {
+    display: flex;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+}
+
+.qr-item {
+    text-align: center;
+}
+
+.qr-item img {
+    width: 90px; height: 90px;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    filter: hue-rotate(100deg) saturate(1.5);
+    transition: all 0.3s;
+}
+
+.qr-item img:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
+}
+
+.qr-item p {
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    margin-top: 0.4rem;
+}
+
+/* Status banner */
+.status-banner {
+    background: linear-gradient(135deg, rgba(0,255,136,0.05), rgba(0,212,255,0.05));
+    border: 1px solid rgba(0,255,136,0.2);
+    border-radius: 8px;
+    padding: 1rem 1.5rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.status-text {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    animation: pulse-dot 2s ease-in-out infinite;
+}
+
+.status-dot.green { background: var(--success); box-shadow: 0 0 10px var(--success); }
+.status-dot.yellow { background: var(--warning); box-shadow: 0 0 10px var(--warning); }
+.status-dot.red { background: var(--danger); box-shadow: 0 0 10px var(--danger); }
+
+@keyframes pulse-dot {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.3); }
+}
+
+.status-text span:first-child {
+    font-weight: 600;
+    color: var(--accent);
+}
+
+.github-link {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 0.8rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.2s;
+}
+
+.github-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 15px var(--accent-glow);
+}
+
+/* Code blocks */
+.quick-start {
+    background: #06060a;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    overflow-x: auto;
+    margin-top: 1rem;
+    position: relative;
+}
+
+.quick-start::before {
+    content: '$';
+    color: var(--accent);
+    margin-right: 0.5rem;
+}
+
+.quick-start code {
+    color: var(--accent2);
+    background: none;
+    padding: 0;
+}
+
+.inline-code {
+    background: #06060a;
+    border: 1px solid var(--border);
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8em;
+    color: var(--accent2);
+}
+
+/* Project hero for single-project pages */
+.project-hero {
+    text-align: center;
+    padding: 3rem 1rem;
+    margin-bottom: 2rem;
+}
+
+.project-hero .logo {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    filter: drop-shadow(0 0 20px var(--accent-glow));
+}
+
+.project-hero h1 {
+    font-size: 2.5rem;
+    background: linear-gradient(135deg, #fff, var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin-bottom: 0.5rem;
+}
+
+.project-hero .tagline {
+    color: var(--text-dim);
+    font-size: 1rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+/* Download button */
+.download-btn {
+    display: inline-block;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dim));
+    color: var(--bg);
+    text-decoration: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 0.85rem;
+    margin-top: 1rem;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 15px var(--accent-glow);
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 25px var(--accent-glow);
+}
+
+/* Changelog */
+.changelog-item {
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.8rem;
+}
+
+.changelog-item:last-child {
+    border-bottom: none;
+}
+
+.changelog-date {
+    color: var(--accent);
+    font-size: 0.65rem;
+    display: inline-block;
+    margin-right: 0.5rem;
+    font-weight: 600;
+}
+
+/* Footer */
+footer {
+    margin-top: 4rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-dim);
+}
+
+footer a {
+    color: var(--text-dim);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+footer a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
+/* Warning boxes */
+.warning-box {
+    background: rgba(255, 170, 0, 0.05);
+    border: 1px solid rgba(255, 170, 0, 0.3);
+    border-radius: 6px;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-size: 0.75rem;
+    color: var(--warning);
+}
+
+.warning-box::before {
+    content: '[WARN] ';
+    font-weight: 600;
+}
+
+/* Blink cursor */
+.cursor {
+    display: inline-block;
+    width: 8px;
+    height: 1em;
+    background: var(--accent);
+    animation: blink 1s step-end infinite;
+    vertical-align: text-bottom;
+    margin-left: 2px;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* Responsive */
+@media (max-width: 700px) {
+    .header { flex-direction: column; text-align: center; }
+    .header::before { width: 100%; height: 3px; }
+    .grid { grid-template-columns: 1fr; }
+    .nav { flex-direction: column; align-items: flex-start; }
+    .project-hero h1 { font-size: 1.8rem; }
+    .status-banner { flex-direction: column; text-align: center; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* Selection */
+::selection {
+    background: var(--accent);
+    color: var(--bg);
+}
+</style>
 </head>
 <body>
+    <canvas id="matrix-canvas"></canvas>
     <div class="container">
-        <div class="logo">🔒</div>
-        <span class="badge">P2P · TOR · ANONYMOUS</span>
-        <h1>M3tr0Chat</h1>
-        <div class="tagline">анонимный p2p-мессенджер через сеть Tor</div>
-        <div class="description">
-            без серверов · без регистрации<br>
-            трафик только через Tor · open source
+        <nav class="nav">
+            <a href="https://dm3tr0.ru" class="nav-brand">dm3tr0</a>
+            <div class="nav-links">
+                <a href="https://dm3tr0.ru">about</a>
+                <a href="https://messenger.dm3tr0.ru" class="active">M3tr0Chat</a>
+                <a href="https://spotifoo.dm3tr0.ru" >Spotifoo</a>
+                <a href="https://diskordik.dm3tr0.ru">Diskordik</a>
+            </div>
+        </nav>
+
+        <div class="project-hero">
+            <div class="logo">🔒</div>
+            <span class="badge">P2P · TOR · ANONYMOUS</span>
+            <h1 class="glitch" data-text="M3tr0Chat">M3tr0Chat</h1>
+            <div class="tagline">анонимный p2p-мессенджер через сеть Tor</div>
         </div>
-        <div class="links">
-            <a href="https://github.com/dm3tr-0/M3tr0Chat">GitHub</a>
+
+        <div class="grid">
+            <div class="card">
+                <h3>описание</h3>
+                <p style="font-size: 1rem; margin-bottom: 1.5rem;">
+                    без серверов · без регистрации<br>
+                    трафик только через Tor · open source
+                </p>
+                <div class="links-row">
+                    <a href="https://github.com/dm3tr-0/M3tr0Chat">GitHub →</a>
+                </div>
+            </div>
+            <div class="card">
+                <h3>статус</h3>
+                <div class="status-text" style="margin-bottom: 1rem;">
+                    <div class="status-dot green"></div>
+                    <span style="color: var(--success); font-weight: 600;">экспериментальный проект</span>
+                </div>
+                <div class="warning-box">
+                    не используйте для критически важных данных без аудита
+                </div>
+            </div>
         </div>
-        <div class="note">
-            ⚠️ экспериментальный проект<br>
-            не используйте для критически важных данных без аудита
-        </div>
+
+        <footer>
+            dm3tr0 · пентестер, исследователь безопасности · <a href="https://github.com/dm3tr-0">GitHub</a>
+            <span class="cursor"></span>
+        </footer>
     </div>
+    <script>
+const canvas = document.getElementById('matrix-canvas');
+const ctx = canvas.getContext('2d');
+
+let w, h;
+const cols = [];
+const fontSize = 14;
+const chars = '01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン';
+
+function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+    const colCount = Math.floor(w / fontSize);
+    for (let i = 0; i < colCount; i++) {
+        cols[i] = Math.random() * -100;
+    }
+}
+
+function draw() {
+    ctx.fillStyle = 'rgba(5, 5, 8, 0.05)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.font = fontSize + 'px JetBrains Mono';
+    
+    const colCount = Math.floor(w / fontSize);
+    for (let i = 0; i < colCount; i++) {
+        const char = chars[Math.floor(Math.random() * chars.length)];
+        const x = i * fontSize;
+        const y = cols[i] * fontSize;
+        
+        // Head is brighter
+        ctx.fillStyle = '#00ff88';
+        ctx.fillText(char, x, y);
+        
+        // Trail
+        ctx.fillStyle = 'rgba(0, 255, 136, 0.3)';
+        ctx.fillText(char, x, y + fontSize);
+        
+        if (y > h && Math.random() > 0.975) {
+            cols[i] = 0;
+        }
+        cols[i]++;
+    }
+}
+
+resize();
+window.addEventListener('resize', resize);
+setInterval(draw, 50);
+</script>
 </body>
 </html>
